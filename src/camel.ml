@@ -70,5 +70,7 @@ let from_json json = {
 }
 
 let item_for_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
-  | [] -> raise (UnknownBuilding building)
+  | [] -> raise (UnknownBuilding "Building Not Found")
   | h::_ -> h.cost_item
+
+ 
