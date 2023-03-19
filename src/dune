@@ -1,0 +1,4 @@
+(library
+ (name camlGame)
+ (public_name CamlGame)
+ (libraries yojson ANSITerminal))
