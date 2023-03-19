@@ -19,7 +19,9 @@
     {
       "name": "field",
       "cost": 10,
-      "production": 0.125
+      "cost item": "catnip",
+      "production": 0.125,
+      "production item": "catnip"
     }
   ]
 }
