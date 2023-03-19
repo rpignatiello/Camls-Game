@@ -1,0 +1,6 @@
+description = ""
+requires = "ANSITerminal yojson"
+archive(byte) = "camlGame.cma"
+archive(native) = "camlGame.cmxa"
+plugin(byte) = "camlGame.cma"
+plugin(native) = "camlGame.cmxs"

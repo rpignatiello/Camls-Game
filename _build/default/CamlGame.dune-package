@@ -1,0 +1,47 @@
+(lang dune 3.7)
+(name CamlGame)
+(sections (lib .) (libexec .) (doc ../../doc/CamlGame))
+(files
+ (lib
+  (META
+   camel.ml
+   camel.mli
+   camlGame.a
+   camlGame.cma
+   camlGame.cmi
+   camlGame.cmt
+   camlGame.cmx
+   camlGame.cmxa
+   camlGame.ml
+   camlGame__Camel.cmi
+   camlGame__Camel.cmt
+   camlGame__Camel.cmti
+   camlGame__Camel.cmx
+   dune-package
+   opam))
+ (libexec (camlGame.cmxs))
+ (doc (README.md)))
+(library
+ (name CamlGame)
+ (kind normal)
+ (archives (byte camlGame.cma) (native camlGame.cmxa))
+ (plugins (byte camlGame.cma) (native camlGame.cmxs))
+ (native_archives camlGame.a)
+ (requires yojson ANSITerminal)
+ (main_module_name CamlGame)
+ (modes byte native)
+ (modules
+  (wrapped
+   (group
+    (alias
+     (obj_name camlGame)
+     (visibility public)
+     (kind alias)
+     (source (path CamlGame) (impl (path camlGame.ml-gen))))
+    (name CamlGame)
+    (modules
+     (module
+      (obj_name camlGame__Camel)
+      (visibility public)
+      (source (path Camel) (intf (path camel.mli)) (impl (path camel.ml))))))
+   (wrapped true))))
