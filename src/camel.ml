@@ -21,6 +21,8 @@
 *)
 open Yojson.Basic.Util
 
+exception UnknownBuilding of string
+
 type setting = {
   required: int;
   required_item: string;
@@ -34,7 +36,9 @@ type item = {
 type building= {
   name: string;
   cost: int;
+  cost_item: string;
   production: float;
+  production_item: string;
 }
 
 type t = {
@@ -55,10 +59,16 @@ let from_item json = {
 let from_building json = {
   name = json |> member "name" |> to_string;
   cost = json |> member "cost" |> to_int;
-  production = json |> member "production" |> to_float
+  cost_item = json |> member "cost item" |> to_string;
+  production = json |> member "production" |> to_float;
+  production_item = json |> member "production item" |> to_string;
 }
 
 let from_json json = {
   items = json |> member "items" |> to_list|> List.map from_item;
   buildings = json |> member "buildings" |> to_list |> List.map from_building
 }
+
+let item_for_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding building)
+  | h::_ -> h.cost_item
