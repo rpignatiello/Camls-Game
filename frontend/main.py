@@ -14,7 +14,7 @@ def main(stdscr):
         d = json.load(f)
 
         # Printing Json Values and time that shows updating capability
-        stdscr.addstr('Camls: ' + d['Camls'] + '\n')
+        stdscr.addstr('Camls: ' + d['Camels'] + '\n')
         for b in d['Buildings']:
             stdscr.addstr(b['name'] + ': ' + b['quantity'] + '\n')
         stdscr.addstr('time: ' + str(i))

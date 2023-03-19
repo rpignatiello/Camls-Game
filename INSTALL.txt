@@ -1,0 +1,2 @@
+1. Run dune build inside the root folder of this project
+2. Run python ./frontend/main.py to display the frontend
