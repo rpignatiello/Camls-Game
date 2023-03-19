@@ -4,6 +4,7 @@ open Camel
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let camelSetting = Yojson.Basic.from_file (data_dir_prefix ^ "camelSetting.json")
+<<<<<<< HEAD
 let pp_string s = "\"" ^ s ^ "\""
 
 let item_for_building_test (name : string) input1 (input2 : string)
@@ -31,3 +32,8 @@ let suite =
   "test suite for Camel Project" >::: List.flatten [ item_for_building_tests ]
 
 let _ = run_test_tt_main suite
+=======
+
+let item_for_building_test (name : string) (input1 : Camel.t) (input2: string) 
+(expected_output : string) : test = 
+>>>>>>> ec43700e048fc9cb4d85a09040872bc517926f4f
