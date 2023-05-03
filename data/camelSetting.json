@@ -2,17 +2,21 @@
   "items": [
     {
       "name": "catnip",
-      "setting": {
-        "required": 0,
-        "required item": "catnip"
-      }
+      "setting": [
+        {
+          "required": 0,
+          "required item": "catnip"
+        }
+      ]
     },
     {
       "name": "wood",
-      "setting": {
-        "required": 100,
-        "required item": "catnip"
-      }
+      "setting": [
+        {
+          "required": 100,
+          "required item": "catnip"
+        }
+      ]
     }
   ],
   "buildings": [

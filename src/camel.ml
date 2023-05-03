@@ -52,8 +52,7 @@ let from_setting json = {
 }
 let from_item json = {
   name = json |> member "name" |> to_string;
-  settings = json |> member "setting" |> to_list |> List.map from_setting
-
+  settings = json |> member "setting" |> to_list |> List.map from_setting;
 }
 
 let from_building json = {
@@ -72,3 +71,15 @@ let from_json json = {
 let item_for_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h::_ -> h.cost_item
+
+let number_for_building setting building = match List.filter(fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h::_ -> h.cost
+
+let produce_item_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> h.production_item
+
+let production_rate_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> h.production
