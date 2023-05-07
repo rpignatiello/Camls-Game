@@ -21,7 +21,7 @@ let from_building json =
 let from_json json =
   {
     camel = json |> member "Camels" |> to_int;
-    buildings = json |> member "buildings" |> to_list |> List.map from_building;
+    buildings = json |> member "Buildings" |> to_list |> List.map from_building;
   }
 
 let quantity_of_building user building =
