@@ -2,9 +2,9 @@
   "Camels": 0,
   "Buildings": [
     {
-      "name": "Fields",
+      "name": "field",
       "quantity": 1
     }
   ],
-  "Catnip": 0
+  "Catnip": 0.0
 }
