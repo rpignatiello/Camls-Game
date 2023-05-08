@@ -108,7 +108,7 @@ let quantity_of_building_test_assert (name : string) input1 (input2 : string) :
 let tick_money_test (name : string) (state : t) (expected_output : float) : test
     =
   name >:: fun _ ->
-  assert_equal expected_output (State.money (State.tick state))
+  assert_equal expected_output (State.get_resource (State.tick state) "catnip")
 
 let buy_building_test (name : string) (money : float) (state : t)
     (quantity : int) (building_type : string) (expected_output : int) : test =
@@ -116,7 +116,7 @@ let buy_building_test (name : string) (money : float) (state : t)
   assert_equal expected_output
     (quantity_of_building
        (State.buy_building
-          (State.edit_money state money)
+          (State.edit_resource state "catnip" 100.)
           quantity building_type)
        building_type)
 

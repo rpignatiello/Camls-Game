@@ -6,5 +6,10 @@
       "quantity": 1
     }
   ],
-  "Catnip": 0.0
+  "Resources" : [
+    {
+      "name": "catnip",
+      "quantity": 0.0
+    }
+  ]
 }
