@@ -2,6 +2,7 @@ open Yojson.Basic.Util
 open Camel
 
 exception UnknownBuilding of string
+exception NotEnoughMoney of string
 
 type owned_buildings = {
   name : string;
@@ -44,6 +45,38 @@ let quantity_of_building user building =
 let quantity_of_camel user = user.camel
 let building_list user = List.map (fun b -> b.name) user.owned_buildings
 let money user = user.money
+
+let edit_money state amt =
+  {
+    money = state.money +. amt;
+    camel = state.camel;
+    owned_buildings = state.owned_buildings;
+    game_settings = state.game_settings;
+  }
+
+(** Increases the quantity of buildings for the player and decreases by the
+    corresponding cost*)
+let buy_building state (quantity : int) (building_type : string) =
+  let total_cost =
+    float_of_int (number_for_building state.game_settings building_type)
+  in
+  if total_cost > state.money then
+    raise (NotEnoughMoney "You don't have enough money for this purchase.")
+  else
+    let new_owned_buildings =
+      List.map
+        (fun b ->
+          if b.name = building_type then
+            { name = b.name; quantity = b.quantity + quantity }
+          else b)
+        state.owned_buildings
+    in
+    {
+      money = state.money -. total_cost;
+      camel = state.camel;
+      owned_buildings = new_owned_buildings;
+      game_settings = state.game_settings;
+    }
 
 (** Updates the amount of money the player has *)
 let tick state =
