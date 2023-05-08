@@ -104,12 +104,20 @@ let quantity_of_building_test_assert (name : string) input1 (input2 : string) :
   assert_raises (State.UnknownBuilding "Building Not Found") (fun () ->
       quantity_of_building (State.from_json input1) input2)
 
+let tick_money_test (name : string) (state : t) (expected_output : float) : test
+    =
+  name >:: fun _ ->
+  assert_equal expected_output (State.money (State.tick state))
+
+let game_state = from_json state
+
 let state_tests =
   [
-    quantity_of_building_test "quantity of valid building" state "Fields" 1;
+    quantity_of_building_test "quantity of valid building" state "field" 1;
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
     quantity_of_camel_test "amount of camels user has at start" state 0;
-    building_list_test "list of building" state [ "Fields" ];
+    building_list_test "list of building" state [ "field" ];
+    tick_money_test "tick money test" game_state 0.125;
   ]
 
 let suite =
