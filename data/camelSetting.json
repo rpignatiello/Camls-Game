@@ -4,7 +4,7 @@
       "name": "catnip",
       "setting": [
         {
-          "required": 0,
+          "required": 0.0,
           "required item": "catnip"
         }
       ]
@@ -13,7 +13,7 @@
       "name": "wood",
       "setting": [
         {
-          "required": 100,
+          "required": 100.0,
           "required item": "catnip"
         }
       ]
@@ -22,14 +22,14 @@
   "buildings": [
     {
       "name": "field",
-      "cost": 10,
+      "cost": 10.0,
       "cost item": "catnip",
       "production": 0.125,
       "production item": "catnip"
     },
     {
       "name": "logging",
-      "cost": 10,
+      "cost": 10.0,
       "cost item": "catnip",
       "production": 0.125,
       "production item": "wood"
