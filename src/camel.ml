@@ -22,9 +22,10 @@
 open Yojson.Basic.Util
 
 exception UnknownBuilding of string
+exception UnknownResource of string
 
 type setting = {
-  required: int;
+  required: float;
   required_item: string;
 }
 
@@ -35,7 +36,7 @@ type item = {
 
 type building= {
   name: string;
-  cost: int;
+  cost: float;
   cost_item : string;
   production: float;
   production_item: string
@@ -47,7 +48,7 @@ type t = {
 }
 
 let from_setting json = {
-  required = json |> member "required" |> to_int;
+  required = json |> member "required" |> to_float;
   required_item = json |> member "required item" |> to_string;
 }
 let from_item json = {
@@ -57,7 +58,7 @@ let from_item json = {
 
 let from_building json = {
   name = json |> member "name" |> to_string;
-  cost = json |> member "cost" |> to_int;
+  cost = json |> member "cost" |> to_float;
   cost_item = json |> member "cost item" |> to_string;
   production = json |> member "production" |> to_float;
   production_item = json |> member "production item" |> to_string
@@ -87,3 +88,7 @@ let production_rate_building setting building = match List.filter (fun x -> x.na
 let contains_building setting building = match List.filter (fun b -> b.name = building) setting.buildings with 
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h :: _ -> true 
+
+let resource_settings setting resource = match List.filter (fun (r : item) -> r.name = resource) setting.items with 
+  | [] -> raise (UnknownResource "Resource Not Found")
+  | h :: _ -> List.nth h.settings 0

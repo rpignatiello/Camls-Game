@@ -95,12 +95,14 @@ let edit_resource state resource amt =
     game_settings = state.game_settings;
   }
 
+(* let trade state resource quantity = *)
+
 (** Increases the quantity of buildings for the player and decreases resources
     by the corresponding cost*)
 let buy_building state (quantity : int) (building_type : string) =
   if contains_building state.game_settings building_type then
     let total_cost =
-      float_of_int (number_for_building state.game_settings building_type)
+      number_for_building state.game_settings building_type
       *. float_of_int quantity
     in
     let resource_type = item_for_building state.game_settings building_type in
