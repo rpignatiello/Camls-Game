@@ -3,6 +3,7 @@ open OUnit2
 open CamlGame
 open Camel
 open State
+open Inputprocessor
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let camelSetting = Yojson.Basic.from_file (data_dir_prefix ^ "camelSetting.json")
@@ -161,7 +162,20 @@ let state_tests =
       "wood" 0.125;
   ]
 
+let parse_buy_test (name : string) (state : t) (input : string)
+    (building : string) (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (State.quantity_of_building
+       (Inputprocessor.parse_input input
+          (State.edit_resource game_state "catnip" 20.0))
+       building)
+
+let inputprocessor_tests =
+  [ parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3 ]
+
 let suite =
-  "test suite for Camel Project" >::: List.flatten [ camel_tests; state_tests ]
+  "test suite for Camel Project"
+  >::: List.flatten [ camel_tests; state_tests; inputprocessor_tests ]
 
 let _ = run_test_tt_main suite

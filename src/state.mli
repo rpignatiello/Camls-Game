@@ -13,6 +13,9 @@ val quantity_of_building : t -> string -> int
 val quantity_of_camel : t -> int
 (** [quantity_of_camel] returns the [int] quantity of camels in game state [t] *)
 
+val game_settings : t -> Camel.t
+(** [game_settings] returns the game settings for game state [t]*)
+
 val building_list : t -> string list
 (** [building_list] returns the [string list] representation of buildings owned
     in the game state [t] *)

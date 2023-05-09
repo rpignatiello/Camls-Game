@@ -59,6 +59,7 @@ let quantity_of_building user building =
   | h :: _ -> h.quantity
 
 let quantity_of_camel user = user.camel
+let game_settings state = state.game_settings
 
 let building_list user =
   List.map (fun (b : owned_buildings) -> b.name) user.owned_buildings
@@ -102,7 +103,7 @@ let buy_building state (quantity : int) (building_type : string) =
       float_of_int (number_for_building state.game_settings building_type)
       *. float_of_int quantity
     in
-    let resource_type = item_for_building game_settings building_type in
+    let resource_type = item_for_building state.game_settings building_type in
     let player_resource_amount =
       (List.nth
          (List.filter (fun r -> r.name = resource_type) state.resources)
