@@ -83,3 +83,7 @@ let produce_item_building setting building = match List.filter (fun x -> x.name 
 let production_rate_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h :: _ -> h.production
+
+let contains_building setting building = match List.filter (fun b -> b.name = building) setting.buildings with 
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> true 

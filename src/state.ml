@@ -63,10 +63,20 @@ let quantity_of_camel user = user.camel
 let building_list user =
   List.map (fun (b : owned_buildings) -> b.name) user.owned_buildings
 
+let rec add_building_type (buildings : owned_buildings list) (bldg : string) =
+  match buildings with
+  | h :: t -> if h.name = bldg then h :: t else h :: add_building_type t bldg
+  | [] -> [ { name = bldg; quantity = 0 } ]
+
 let rec get_resource state resource =
   match List.filter (fun x -> x.name = resource) state.resources with
   | [] -> raise (UnknownResource "Resource Not Found")
   | h :: _ -> h.quantity
+
+let rec add_resource_type (resources : resources list) (res : string) =
+  match resources with
+  | h :: t -> if h.name = res then h :: t else h :: add_resource_type t res
+  | [] -> [ { name = res; quantity = 0.0 } ]
 
 let edit_resource state resource amt =
   let new_resources =
@@ -87,40 +97,45 @@ let edit_resource state resource amt =
 (** Increases the quantity of buildings for the player and decreases resources
     by the corresponding cost*)
 let buy_building state (quantity : int) (building_type : string) =
-  let total_cost =
-    float_of_int (number_for_building state.game_settings building_type)
-    *. float_of_int quantity
-  in
-  let resource_type = item_for_building game_settings building_type in
-  let player_resource_amount =
-    (List.nth (List.filter (fun r -> r.name = resource_type) state.resources) 0)
-      .quantity
-  in
-  if total_cost > player_resource_amount then
-    raise (NotEnoughMoney "You don't have enough money for this purchase.")
-  else
-    let new_owned_buildings =
-      List.map
-        (fun (b : owned_buildings) : owned_buildings ->
-          if b.name = building_type then
-            { name = b.name; quantity = b.quantity + quantity }
-          else b)
-        state.owned_buildings
+  if contains_building state.game_settings building_type then
+    let total_cost =
+      float_of_int (number_for_building state.game_settings building_type)
+      *. float_of_int quantity
     in
-    let new_resources =
-      List.map
-        (fun r ->
-          if r.name = resource_type then
-            { name = r.name; quantity = r.quantity -. total_cost }
-          else r)
-        state.resources
+    let resource_type = item_for_building game_settings building_type in
+    let player_resource_amount =
+      (List.nth
+         (List.filter (fun r -> r.name = resource_type) state.resources)
+         0)
+        .quantity
     in
-    {
-      resources = new_resources;
-      camel = state.camel;
-      owned_buildings = new_owned_buildings;
-      game_settings = state.game_settings;
-    }
+    if total_cost > player_resource_amount then
+      raise (NotEnoughMoney "You don't have enough money for this purchase.")
+    else
+      let new_resources =
+        List.map
+          (fun r ->
+            if r.name = resource_type then
+              { name = r.name; quantity = r.quantity -. total_cost }
+            else r)
+          (add_resource_type state.resources
+             (produce_item_building state.game_settings building_type))
+      in
+      let new_owned_buildings =
+        List.map
+          (fun (b : owned_buildings) : owned_buildings ->
+            if b.name = building_type then
+              { name = b.name; quantity = b.quantity + quantity }
+            else b)
+          (add_building_type state.owned_buildings building_type)
+      in
+      {
+        resources = new_resources;
+        camel = state.camel;
+        owned_buildings = new_owned_buildings;
+        game_settings = state.game_settings;
+      }
+  else raise (UnknownBuilding "Building Not Found")
 
 let rec tick_helper (state : t) (resources : resources list)
     (buildings : owned_buildings list) =

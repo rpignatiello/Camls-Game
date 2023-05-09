@@ -26,6 +26,13 @@
       "cost item": "catnip",
       "production": 0.125,
       "production item": "catnip"
+    },
+    {
+      "name": "logging",
+      "cost": 10,
+      "cost item": "catnip",
+      "production": 0.125,
+      "production item": "wood"
     }
   ]
 }

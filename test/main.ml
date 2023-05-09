@@ -105,20 +105,33 @@ let quantity_of_building_test_assert (name : string) input1 (input2 : string) :
   assert_raises (State.UnknownBuilding "Building Not Found") (fun () ->
       quantity_of_building (State.from_json input1) input2)
 
-let tick_money_test (name : string) (state : t) (expected_output : float) : test
-    =
+let tick_test (name : string) (state : t) (resource : string)
+    (expected_output : float) : test =
   name >:: fun _ ->
-  assert_equal expected_output (State.get_resource (State.tick state) "catnip")
+  assert_equal expected_output (State.get_resource (State.tick state) resource)
 
-let buy_building_test (name : string) (money : float) (state : t)
-    (quantity : int) (building_type : string) (expected_output : int) : test =
+let buy_building_test (name : string) (state : t) (resource_to_edit : string)
+    (amt : float) (building_type : string) (quantity : int)
+    (expected_output : int) : test =
   name >:: fun _ ->
   assert_equal expected_output
     (quantity_of_building
        (State.buy_building
-          (State.edit_resource state "catnip" 100.)
+          (State.edit_resource state resource_to_edit amt)
           quantity building_type)
        building_type)
+
+let buy_building_new_resource_test (name : string) (state : t)
+    (resource_to_edit : string) (amt : float) (building_type : string)
+    (quantity : int) (resource_to_find : string) (expected_output : float) :
+    test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (get_resource
+       (State.buy_building
+          (State.edit_resource state resource_to_edit amt)
+          quantity building_type)
+       resource_to_find)
 
 let buy_building_exception_test (name : string) (state : t) (quantity : int)
     (building_type : string) : test =
@@ -135,10 +148,17 @@ let state_tests =
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
     quantity_of_camel_test "amount of camels user has at start" state 0;
     building_list_test "list of building" state [ "field" ];
-    tick_money_test "tick money test" game_state 0.125;
-    buy_building_test "buy building test" 100. game_state 10 "field" 11;
+    buy_building_test "buy building test" game_state "catnip" 100.0 "field" 10
+      11;
+    buy_building_test "buy logging test" game_state "catnip" 100.0 "logging" 1 1;
+    buy_building_new_resource_test "buy building new resource test" game_state
+      "catnip" 100.0 "logging" 1 "wood" 0.0;
     buy_building_exception_test "buy building exception test" game_state 10
       "field";
+    tick_test "tick money test" game_state "catnip" 0.125;
+    tick_test "tick loggingtest"
+      (buy_building (State.edit_resource game_state "catnip" 10.0) 1 "logging")
+      "wood" 0.125;
   ]
 
 let suite =
