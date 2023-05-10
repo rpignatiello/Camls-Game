@@ -64,6 +64,8 @@ let game_settings state = state.game_settings
 let building_list user =
   List.map (fun (b : owned_buildings) -> b.name) user.owned_buildings
 
+let resource_list user = List.map (fun (r : resources) -> r.name) user.resources
+
 let rec add_building_type (buildings : owned_buildings list) (bldg : string) =
   match buildings with
   | h :: t -> if h.name = bldg then h :: t else h :: add_building_type t bldg
@@ -169,3 +171,39 @@ let tick (state : t) =
     owned_buildings = state.owned_buildings;
     game_settings = state.game_settings;
   }
+
+(* (let (p : Yojson.Basic.t) = 'Assoc [("name", 'String x.name); ("quantity",
+   'Int x.quantity)]) in p :: a *)
+
+let convert_buil_list (state : t) =
+  String.concat ", "
+    (List.fold_left
+       (fun a x ->
+         ("{ \n" ^ "\"name\": \"" ^ x ^ "\", \n" ^ "\"quantity\": "
+         ^ string_of_int (quantity_of_building state x)
+         ^ "\n" ^ "}")
+         :: a)
+       [] (building_list state))
+
+let convert_resources_lis (state : t) =
+  String.concat ", "
+    (List.fold_left
+       (fun a x ->
+         ("{ \n" ^ "\"name\": \"" ^ x ^ "\", \n" ^ "\"quantity\": "
+         ^ string_of_float (get_resource state x)
+         ^ "0\n" ^ "}")
+         :: a)
+       [] (resource_list state))
+
+let save (state : t) =
+  let input =
+    "{ \n" ^ "\"Camels\": " ^ string_of_int state.camel ^ ", \n"
+    ^ "\"Buildings\": [\n" ^ convert_buil_list state
+    ^ "\n], \n \"Resources\": [\n"
+    ^ convert_resources_lis state
+    ^ "\n ]\n }"
+  in
+  let oc = open_out ("data" ^ Filename.dir_sep ^ "state.json") in
+  flush oc;
+  Printf.fprintf oc "%s" input;
+  close_out oc

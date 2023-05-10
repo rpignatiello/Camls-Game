@@ -38,6 +38,13 @@ let production_rate_building_test (name : string) input1 (input2 : string)
     (production_rate_building (Camel.from_json input1) input2)
     ~printer:string_of_float
 
+let contains_building_test (name : string) input1 (input2 : string)
+    (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (contains_building (Camel.from_json input1) input2)
+    ~printer:string_of_bool
+
 let item_for_building_test_assert (name : string) input1 (input2 : string) :
     test =
   name >:: fun _ ->
@@ -79,6 +86,7 @@ let camel_tests =
       camelSetting "field" 0.125;
     production_rate_building_test_assert "production rate of invalid building"
       camelSetting "cat";
+    contains_building_test "valid building" camelSetting "field" true;
   ]
 
 let quantity_of_building_test (name : string) input1 (input2 : string)
@@ -141,6 +149,10 @@ let buy_building_exception_test (name : string) (state : t) (quantity : int)
     (State.NotEnoughMoney "You don't have enough money for this purchase.")
     (fun () -> State.buy_building state quantity building_type)
 
+let save_test (name : string) (state : t) =
+  State.save state;
+  assert true
+
 let game_state = from_json state
 
 let state_tests =
@@ -173,6 +185,8 @@ let parse_buy_test (name : string) (state : t) (input : string)
 
 let inputprocessor_tests =
   [ parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3 ]
+
+let save_tests = [ save_test "save test" game_state ]
 
 let suite =
   "test suite for Camel Project"
