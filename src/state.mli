@@ -8,7 +8,7 @@ val from_json : Yojson.Basic.t -> t
 
 val quantity_of_building : t -> string -> int
 (** [quantity_of_building] returns the [int] quantity of buildings of type
-    [string] ing game state [t] *)
+    [string] in game state [t] *)
 
 val quantity_of_camel : t -> int
 (** [quantity_of_camel] returns the [int] quantity of camels in game state [t] *)
@@ -39,3 +39,5 @@ val buy_building : t -> int -> string -> t
 val tick : t -> t
 (** [tick] returns the updated game state [t] after one unit of time has passed.
     Resource values are updated based on owned building production*)
+
+val save : t -> unit
