@@ -18,7 +18,10 @@ open CamlGame
 
 let () =
   let main_window = initscr () in
+  let _ = nodelay main_window true in
+  let _ = noecho in
   let i = ref 0 in
+  let ch = ref "" in
   let data_dir_prefix = "data" ^ Filename.dir_sep in
   let d = Yojson.Basic.from_file (data_dir_prefix ^ "state.json") in
   let c = ref (State.from_json d) in
@@ -45,10 +48,14 @@ let () =
     if not (waddstr main_window ("time: " ^ string_of_int !i)) then
       failwith "Error"
     else ();
+    let input = getch () in
+    let tmp = if input = -1 then "" else String.make 1 (char_of_int input) in
+    ch := !ch ^ tmp;
+    let _ = waddstr main_window ("\n" ^ "User input: " ^ !ch ^ "\n") in
     i := !i + 1;
 
     if not (refresh ()) then failwith "error" else ();
     c := State.tick !c;
-    Unix.sleep 1
+    ignore (Unix.select [] [] [] 0.05)
   done;
   endwin ()
