@@ -28,6 +28,10 @@ val edit_resource : t -> string -> float -> t
 (** [edit_resource] returns a new game state [t] with the quantity of resource
     [string] increased by amount [float] *)
 
+val trade : t -> string -> int -> t
+(** [trade] exchangees the corresponding cost of purchasing [int] quantity of
+    [string] resource and returns the updated state *)
+
 val buy_building : t -> int -> string -> t
 (** [buy_building] returns a new game state [t] with building [string] quantity
     increased by [int] if the player has enough resources to purchase *)

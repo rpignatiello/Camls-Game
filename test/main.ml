@@ -141,6 +141,18 @@ let buy_building_exception_test (name : string) (state : t) (quantity : int)
     (State.NotEnoughMoney "You don't have enough money for this purchase.")
     (fun () -> State.buy_building state quantity building_type)
 
+let trade_test (name : string) (state : t) (resource_to_edit : string)
+    (amt : float) (resource_type : string) (quantity : int)
+    (expected_output : float) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (State.get_resource
+       (State.trade
+          (State.edit_resource state resource_to_edit amt)
+          resource_type quantity)
+       resource_type)
+    ~printer:string_of_float
+
 let game_state = from_json state
 
 let state_tests =
@@ -160,6 +172,7 @@ let state_tests =
     tick_test "tick loggingtest"
       (buy_building (State.edit_resource game_state "catnip" 10.0) 1 "logging")
       "wood" 0.125;
+    trade_test "trade test" game_state "catnip" 1000.0 "wood" 10 10.0;
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)
@@ -171,8 +184,21 @@ let parse_buy_test (name : string) (state : t) (input : string)
           (State.edit_resource game_state "catnip" 20.0))
        building)
 
+let parse_trade_test (name : string) (state : t) (input : string)
+    (resource : string) (expected_output : float) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (State.get_resource
+       (Inputprocessor.parse_input input
+          (State.edit_resource game_state "catnip" 1000.0))
+       resource)
+
 let inputprocessor_tests =
-  [ parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3 ]
+  [
+    parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3;
+    parse_trade_test "parse trade wood test" game_state "trade wood 10" "wood"
+      10.0;
+  ]
 
 let suite =
   "test suite for Camel Project"

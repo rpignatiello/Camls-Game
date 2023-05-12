@@ -95,7 +95,36 @@ let edit_resource state resource amt =
     game_settings = state.game_settings;
   }
 
-(* let trade state resource quantity = *)
+let trade state resource quantity =
+  (* obtain total cost of purchase and amount of resources the use has *)
+  let cost =
+    float_of_int quantity
+    *. resource_cost (resource_settings state.game_settings resource)
+  in
+  let required_resource =
+    resource_cost_type (resource_settings state.game_settings resource)
+  in
+  let user_resource_amt = get_resource state required_resource in
+  if cost > user_resource_amt then
+    raise (NotEnoughMoney "You don't have enough money for this purchase.")
+  else
+    (* increase the purchased resource and decrease the payment resource*)
+    let new_resources =
+      List.map
+        (fun r ->
+          if r.name = resource then
+            { name = r.name; quantity = r.quantity +. float_of_int quantity }
+          else if r.name = required_resource then
+            { name = r.name; quantity = r.quantity -. cost }
+          else r)
+        (add_resource_type state.resources resource)
+    in
+    {
+      resources = new_resources;
+      camel = state.camel;
+      owned_buildings = state.owned_buildings;
+      game_settings = state.game_settings;
+    }
 
 (** Increases the quantity of buildings for the player and decreases resources
     by the corresponding cost*)

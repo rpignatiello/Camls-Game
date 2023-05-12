@@ -89,6 +89,13 @@ let contains_building setting building = match List.filter (fun b -> b.name = bu
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h :: _ -> true 
 
+let contains_resource setting resource = match List.filter (fun (r : item) -> r.name = resource) setting.items with 
+  | [] -> raise (UnknownResource "Resource Not Found")
+  | h :: _ -> true  
+
 let resource_settings setting resource = match List.filter (fun (r : item) -> r.name = resource) setting.items with 
   | [] -> raise (UnknownResource "Resource Not Found")
   | h :: _ -> List.nth h.settings 0
+
+let resource_cost setting = setting.required
+let resource_cost_type setting = setting.required_item

@@ -27,6 +27,30 @@ let buy cmd_list (state : State.t) =
       raise (InvalidInput "Error: Quantity to Purchase Must be Greater than 0.")
     else buy_building state quantity (List.nth cmd_list 1)
 
+let trade cmd_list (state : State.t) =
+  if List.length cmd_list <> 3 then
+    raise
+      (InvalidInput
+         "Error: Incorrect Number of Arguments Provided. To trade resources \
+          use the form [trade] [target resource] [quantity]")
+  else if
+    not (contains_resource (State.game_settings state) (List.nth cmd_list 1))
+  then
+    raise
+      (InvalidInput
+         "Error: Resource Not Found. Please Check that the Requested Resource \
+          Exists")
+  else
+    let quantity =
+      try int_of_string (List.nth cmd_list 2)
+      with Failure _ ->
+        raise (InvalidInput "Invalid Quantity to Trade for Entered")
+    in
+    if quantity <= 0 then
+      raise
+        (InvalidInput "Error: Quantity to Trade for Must be Greater than 0.")
+    else trade state (List.nth cmd_list 1) quantity
+
 let string_empty s = if s = " " || s = "" then false else true
 
 let parse_input input state =
@@ -36,5 +60,6 @@ let parse_input input state =
   in
   match cmd_list with
   | [] -> raise (NoInput "Error: Please Input a Command")
-  | "buy" :: t when t <> [] -> buy cmd_list state
+  | "buy" :: _ -> buy cmd_list state
+  | "trade" :: _ -> trade cmd_list state
   | _ -> raise (InvalidInput "Error: Invalid Input")
