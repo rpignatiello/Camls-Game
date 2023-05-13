@@ -52,7 +52,17 @@ let () =
         then failwith "Error!"
         else ())
       (State.building_list !c);
-    if not (waddstr main_window ("time: " ^ string_of_int !i)) then
+    List.iter
+      (fun b ->
+        if
+          not
+            (waddstr main_window
+               (b ^ ": " ^ string_of_float (State.get_resource !c b) ^ "\n"))
+        then failwith "Error!"
+        else ())
+      (State.resource_list !c);
+
+    if not (waddstr main_window ("time: " ^ string_of_int (!i / 10))) then
       failwith "Error"
     else ();
     let input = getch () in
@@ -76,7 +86,7 @@ let () =
     i := !i + 1;
 
     if not (refresh ()) then failwith "error" else ();
-    c := State.tick !c;
+    if !i mod 10 = 0 then c := State.tick !c else c := !c;
     ignore (Unix.select [] [] [] 0.05)
   done;
   endwin ()
