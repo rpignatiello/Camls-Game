@@ -1,21 +1,21 @@
 {
-  "Camels": 2,
+  "Camels": 0,
   "Buildings": [
     {
-      "name": "hut",
+      "name": "field",
       "quantity": 1
     },
     {
-      "name": "field",
+      "name": "hut",
       "quantity": 1
     }
   ],
   "Resources": [
     {
       "name": "camelnip",
-      "quantity": 1.250
+      "quantity": 0.0
     }
   ],
   "Season": "summer",
-  "Day": 11
+  "Day": 1
 }

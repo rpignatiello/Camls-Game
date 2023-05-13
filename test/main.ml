@@ -322,21 +322,12 @@ let def =
   State.from_json
     (Yojson.Basic.from_file (data_dir_prefix ^ "default_state.json"))
 
-let reset_state = State.save def
-
 let save_tests =
-  [
-    save_test "save test" (State.tick game_state);
-    ( "Reset" >:: fun _ ->
-      reset_state;
-      assert true );
-  ]
+  [ save_test "save test" (State.tick game_state); save_test "Reset" def ]
 
 let suite =
   "test suite for Camel Project"
   >::: List.flatten
          [ camel_tests; state_tests; inputprocessor_tests; save_tests ]
 
-let _ =
-  run_test_tt_main suite;
-  reset_state
+let _ = run_test_tt_main suite

@@ -257,4 +257,5 @@ let save (state : t) =
   let oc = open_out ("data" ^ Filename.dir_sep ^ "state.json") in
   flush oc;
   Printf.fprintf oc "%s" input;
+  flush oc;
   close_out oc
