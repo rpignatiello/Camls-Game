@@ -1,3 +1,4 @@
+(* To run this file: OCAMLRUNPARAM=b dune exec frontend/front.exe *)
 open Curses
 open Yojson.Basic.Util
 open CamlGame
@@ -8,24 +9,13 @@ type error_message = {
   time : int;
 }
 
-(* let rec main stdscr = let i = ref 0 in while true do (* Clear anything
-   previously displayed on screen *) clear (); let data_dir_prefix = "data" ^
-   Filename.dir_sep in let d = Yojson.Basic.from_file (data_dir_prefix ^
-   "state.json") in let c = State.from_json d in
-
-   (* Printing json values and time that shows updating capability *) if not
-   (addstr ("Camels: " ^ string_of_int (State.quantity_of_camel c) ^ "\n")) then
-   failwith "Error" else (); List.iter (fun b -> if not (addstr (b ^ ": " ^
-   string_of_int (State.quantity_of_building c b) ^ "\n")) then failwith
-   "Error!" else ()) (State.building_list c); if not (addstr ("time: " ^
-   string_of_int !i)) then failwith "Error" else (); i := !i + 1;
-
-   if not (refresh ()) then failwith "error" else (); Unix.sleepf 0.5 done *)
+(* TODO 1. Add save option to inputprocessor_tests 2. add help option *)
 
 let () =
   let main_window = initscr () in
   let _ = nodelay main_window true in
   let _ = noecho in
+  let _ = curs_set 0 in
   let i = ref 0 in
   let ch = ref "" in
   let err = ref { message = ""; time = 0 } in
