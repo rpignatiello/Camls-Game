@@ -33,6 +33,35 @@
       "cost item": "camelnip",
       "production": 0.125,
       "production item": "wood"
+    },
+    {
+      "name": "hut",
+      "cost": 5.0,
+      "cost item": "wood",
+      "production": 0.0,
+      "production item": ""
+    }
+  ],
+  "seasons": [
+    {
+      "name": "spring",
+      "multiplier": 1.5,
+      "next": "summer"
+    },
+    {
+      "name": "summer",
+      "multiplier": 1.0,
+      "next": "fall"
+    },
+    {
+      "name": "fall",
+      "multiplier": 1.0,
+      "next": "winter"
+    },
+    {
+      "name": "winter",
+      "multiplier": 0.25,
+      "next": "spring"
     }
   ]
 }
