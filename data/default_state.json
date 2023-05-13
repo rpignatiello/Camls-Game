@@ -2,6 +2,10 @@
   "Camels": 0,
   "Buildings": [
     {
+      "name": "hut",
+      "quantity": 1
+    },
+    {
       "name": "field",
       "quantity": 1
     }
@@ -11,5 +15,7 @@
       "name": "camelnip",
       "quantity": 0.0
     }
-  ]
+  ],
+  "Season": "summer",
+  "Day": 1
 }

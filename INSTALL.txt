@@ -1,2 +1,2 @@
 1. Run dune build inside the root folder of this project
-2. Run python ./frontend/front.exe to display the frontend
+2. Run dune exec ./frontend/front.exe to display the frontend
