@@ -20,6 +20,8 @@ type t = {
   camel : int;
   owned_buildings : owned_buildings list;
   game_settings : Camel.t;
+  season : string;
+  day : int;
 }
 
 let game_settings =
@@ -47,6 +49,8 @@ let from_json json =
     owned_buildings =
       json |> member "Buildings" |> to_list |> List.map from_building;
     game_settings;
+    season = json |> member "Season" |> to_string;
+    day = json |> member "Day" |> to_int;
   }
 
 let quantity_of_building user building =
@@ -65,6 +69,7 @@ let building_list user =
   List.map (fun (b : owned_buildings) -> b.name) user.owned_buildings
 
 let resource_list user = List.map (fun (r : resources) -> r.name) user.resources
+let calculate_camels user = quantity_of_building user "hut" * 2
 
 let rec add_building_type (buildings : owned_buildings list) (bldg : string) =
   match buildings with
@@ -92,9 +97,11 @@ let edit_resource state resource amt =
   in
   {
     resources = new_resources;
-    camel = state.camel;
+    camel = calculate_camels state;
     owned_buildings = state.owned_buildings;
     game_settings = state.game_settings;
+    season = state.season;
+    day = state.day;
   }
 
 let trade state resource quantity =
@@ -123,9 +130,11 @@ let trade state resource quantity =
     in
     {
       resources = new_resources;
-      camel = state.camel;
+      camel = calculate_camels state;
       owned_buildings = state.owned_buildings;
       game_settings = state.game_settings;
+      season = state.season;
+      day = state.day;
     }
 
 (** Increases the quantity of buildings for the player and decreases resources
@@ -165,9 +174,11 @@ let buy_building state (quantity : int) (building_type : string) =
       in
       {
         resources = new_resources;
-        camel = state.camel;
+        camel = calculate_camels state;
         owned_buildings = new_owned_buildings;
         game_settings = state.game_settings;
+        season = state.season;
+        day = state.day;
       }
   else raise (UnknownBuilding "Building Not Found")
 
@@ -179,6 +190,7 @@ let rec tick_helper (state : t) (resources : resources list)
       let amt =
         float_of_int h.quantity
         *. production_rate_building state.game_settings h.name
+        *. season_multiplier state.game_settings state.season
       in
       let new_resource_list =
         List.map
@@ -194,15 +206,24 @@ let tick (state : t) =
   let new_resource_list =
     tick_helper state state.resources state.owned_buildings
   in
-  {
-    resources = new_resource_list;
-    camel = state.camel;
-    owned_buildings = state.owned_buildings;
-    game_settings = state.game_settings;
-  }
-
-(* (let (p : Yojson.Basic.t) = 'Assoc [("name", 'String x.name); ("quantity",
-   'Int x.quantity)]) in p :: a *)
+  if state.day >= 999 then
+    {
+      resources = new_resource_list;
+      camel = calculate_camels state;
+      owned_buildings = state.owned_buildings;
+      game_settings = state.game_settings;
+      season = next_season state.game_settings state.season;
+      day = 1;
+    }
+  else
+    {
+      resources = new_resource_list;
+      camel = calculate_camels state;
+      owned_buildings = state.owned_buildings;
+      game_settings = state.game_settings;
+      season = state.season;
+      day = state.day + 1;
+    }
 
 let convert_buil_list (state : t) =
   String.concat ", "
@@ -230,7 +251,8 @@ let save (state : t) =
     ^ "\"Buildings\": [\n" ^ convert_buil_list state
     ^ "\n], \n \"Resources\": [\n"
     ^ convert_resources_lis state
-    ^ "\n ]\n }"
+    ^ "\n ],\n \"Season\": \"" ^ state.season ^ "\",\n \"Day\": "
+    ^ string_of_int state.day ^ "\n }"
   in
   let oc = open_out ("data" ^ Filename.dir_sep ^ "state.json") in
   flush oc;

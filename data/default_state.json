@@ -1,5 +1,5 @@
 {
-  "Camels": 2,
+  "Camels": 0,
   "Buildings": [
     {
       "name": "hut",
@@ -13,9 +13,9 @@
   "Resources": [
     {
       "name": "camelnip",
-      "quantity": 1.250
+      "quantity": 0.0
     }
   ],
   "Season": "summer",
-  "Day": 11
+  "Day": 1
 }
