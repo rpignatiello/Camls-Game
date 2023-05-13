@@ -16,10 +16,6 @@
     cost to purchase
     production
     quantity
-  
-  seasons
-    4 different season
-    multiplier
 
   https://docs.python.org/3/howto/curses.html
 *)
@@ -39,7 +35,7 @@ type item = {
   settings: setting list;
 }
 
-type building = {
+type building= {
   name: string;
   cost: float;
   cost_item : string;
@@ -56,7 +52,7 @@ type season = {
 type t = {
   items: item list;
   buildings: building list;
-  seasons : season list;
+  seasons : season list
 }
 
 let from_setting json = {
@@ -73,7 +69,7 @@ let from_building json = {
   cost = json |> member "cost" |> to_float;
   cost_item = json |> member "cost item" |> to_string;
   production = json |> member "production" |> to_float;
-  production_item = json |> member "production item" |> to_string;
+  production_item = json |> member "production item" |> to_string
 }
 
 let from_season json = {
@@ -88,42 +84,35 @@ let from_json json = {
   seasons = json |> member "seasons" |> to_list |> List.map from_season;
 }
 
-let item_for_building setting building = match List.filter 
-  (fun x -> x.name = building) setting.buildings with
+let item_for_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h::_ -> h.cost_item
 
-let number_for_building setting building = match List.filter 
-  (fun x -> x.name = building) setting.buildings with
-    | [] -> raise (UnknownBuilding "Building Not Found")
-    | h::_ -> h.cost
+let number_for_building setting building = match List.filter(fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h::_ -> h.cost
 
-let produce_item_building setting building = match List.filter 
-  (fun x -> x.name = building) setting.buildings with
-    | [] -> raise (UnknownBuilding "Building Not Found")
-    | h :: _ -> h.production_item
+let produce_item_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> h.production_item
 
-let production_rate_building setting building = match List.filter 
-  (fun x -> x.name = building) setting.buildings with
-    | [] -> raise (UnknownBuilding "Building Not Found")
-    | h :: _ -> h.production
+let production_rate_building setting building = match List.filter (fun x -> x.name = building) setting.buildings with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> h.production
 
-let contains_building setting building = match List.filter 
-  (fun b -> b.name = building) setting.buildings with 
-    | [] -> raise (UnknownBuilding "Building Not Found")
-    | h :: _ -> true 
+let contains_building setting building = match List.filter (fun b -> b.name = building) setting.buildings with 
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: _ -> true 
 
-let contains_resource setting resource = match 
-  List.filter (fun (r : item) -> r.name = resource) setting.items with 
-    | [] -> raise (UnknownResource "Resource Not Found")
-    | h :: _ -> true  
+let contains_resource setting resource = match List.filter (fun (r : item) -> r.name = resource) setting.items with 
+  | [] -> raise (UnknownResource "Resource Not Found")
+  | h :: _ -> true  
 
-let resource_settings setting resource = match 
-  List.filter (fun (r : item) -> r.name = resource) setting.items with 
-    | [] -> raise (UnknownResource "Resource Not Found")
-    | h :: _ -> List.nth h.settings 0
+let resource_settings setting resource = match List.filter (fun (r : item) -> r.name = resource) setting.items with 
+  | [] -> raise (UnknownResource "Resource Not Found")
+  | h :: _ -> List.nth h.settings 0
 
-let season_multiplier setting season = match 
+  let season_multiplier setting season = match 
   List.filter (fun (s : season) -> s.seasonName = season) setting.seasons with
     | [] -> raise (UnknownSeason "Season Not Found")
     | h :: _ -> h.multiplier

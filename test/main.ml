@@ -220,6 +220,11 @@ let tick_test (name : string) (state : t) (resource : string)
     (State.get_resource (State.tick state) resource)
     ~printer:string_of_float
 
+let get_season_test (name : string) (user : t) (expected_output : string) : test
+    =
+  name >:: fun _ ->
+  assert_equal expected_output (State.get_season user) ~printer:pp_string
+
 let buy_building_test (name : string) (state : t) (resource_to_edit : string)
     (amt : float) (building_type : string) (quantity : int)
     (expected_output : int) : test =
@@ -291,6 +296,7 @@ let state_tests =
          1 "logging")
       "wood" 0.125;
     trade_test "trade test" game_state "camelnip" 1000.0 "wood" 10 10.0;
+    get_season_test "current season" game_state "summer";
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)

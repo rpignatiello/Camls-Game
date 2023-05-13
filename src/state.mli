@@ -44,3 +44,4 @@ val save : t -> unit
 (** [save t] saves the state [t] onto state.json file. **)
 
 val resource_list : t -> string list
+val get_season : t -> string

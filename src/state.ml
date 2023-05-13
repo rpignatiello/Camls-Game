@@ -62,6 +62,7 @@ let quantity_of_building user building =
   | [] -> raise (UnknownBuilding "Building Not Found")
   | h :: _ -> h.quantity
 
+let get_season user = user.season
 let quantity_of_camel user = user.camel
 let game_settings state = state.game_settings
 

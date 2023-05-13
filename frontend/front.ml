@@ -29,7 +29,9 @@ let () =
     (* Printing json values and time that shows updating capability *)
     ignore
       (waddstr main_window
-         ("Camels: " ^ string_of_int (State.quantity_of_camel !c) ^ "\n"));
+         ("Season: " ^ State.get_season !c ^ "\n" ^ "Camels: "
+         ^ string_of_int (State.quantity_of_camel !c)
+         ^ "\n"));
     (* then failwith "Error" else (); *)
     List.iter
       (fun b ->
