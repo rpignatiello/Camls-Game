@@ -203,13 +203,28 @@ let rec tick_helper (state : t) (resources : resources list)
       in
       tick_helper state new_resource_list t
 
+let rec camelnip_consume resource_list camel hard =
+  if hard then
+    match resource_list with
+    | [] -> []
+    | h :: t ->
+        if h.name = "camelnip" then
+          {
+            name = h.name;
+            quantity = h.quantity -. (float_of_int camel *. 0.85);
+          }
+          :: t
+        else h :: camelnip_consume t camel hard
+  else resource_list
+
 let tick (state : t) =
   let new_resource_list =
     tick_helper state state.resources state.owned_buildings
   in
   if state.day >= 999 then
     {
-      resources = new_resource_list;
+      resources =
+        camelnip_consume new_resource_list (calculate_camels state) false;
       camel = calculate_camels state;
       owned_buildings = state.owned_buildings;
       game_settings = state.game_settings;
@@ -218,7 +233,8 @@ let tick (state : t) =
     }
   else
     {
-      resources = new_resource_list;
+      resources =
+        camelnip_consume new_resource_list (calculate_camels state) false;
       camel = calculate_camels state;
       owned_buildings = state.owned_buildings;
       game_settings = state.game_settings;
