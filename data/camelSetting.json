@@ -1,11 +1,11 @@
 {
   "items": [
     {
-      "name": "catnip",
+      "name": "camelnip",
       "setting": [
         {
           "required": 0.0,
-          "required item": "catnip"
+          "required item": "camelnip"
         }
       ]
     },
@@ -14,7 +14,7 @@
       "setting": [
         {
           "required": 100.0,
-          "required item": "catnip"
+          "required item": "camelnip"
         }
       ]
     }
@@ -23,14 +23,14 @@
     {
       "name": "field",
       "cost": 10.0,
-      "cost item": "catnip",
+      "cost item": "camelnip",
       "production": 0.125,
-      "production item": "catnip"
+      "production item": "camelnip"
     },
     {
       "name": "logging",
       "cost": 10.0,
-      "cost item": "catnip",
+      "cost item": "camelnip",
       "production": 0.125,
       "production item": "wood"
     }

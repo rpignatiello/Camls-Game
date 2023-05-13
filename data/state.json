@@ -1,15 +1,15 @@
-{
-  "Camels": 0,
-  "Buildings": [
-    {
-      "name": "field",
-      "quantity": 1
-    }
-  ],
-  "Resources": [
-    {
-      "name": "catnip",
-      "quantity": 0.0
-    }
-  ]
+{ 
+"Camels": 0, 
+"Buildings": [
+{ 
+"name": "field", 
+"quantity": 1
 }
+], 
+ "Resources": [
+{ 
+"name": "camelnip", 
+"quantity": 0.0
+}
+ ]
+ }

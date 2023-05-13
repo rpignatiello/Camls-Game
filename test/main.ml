@@ -72,14 +72,14 @@ let production_rate_building_test_assert (name : string) input1
 let camel_tests =
   [
     item_for_building_test "item required to make building field" camelSetting
-      "field" "catnip";
+      "field" "camelnip";
     item_for_building_test_assert "item not a valid building" camelSetting "cat";
     number_for_building_test "amount needed to build a building test"
       camelSetting "field" 10.;
     number_for_building_test_assert
       "amount needed to build from invalid building" camelSetting "cat";
     produce_item_building_test "item produced from valid building" camelSetting
-      "field" "catnip";
+      "field" "camelnip";
     produce_item_building_test_assert "item produced from invalid building"
       camelSetting "cat";
     production_rate_building_test "production rate of valid building"
@@ -173,18 +173,21 @@ let state_tests =
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
     quantity_of_camel_test "amount of camels user has at start" state 0;
     building_list_test "list of building" state [ "field" ];
-    buy_building_test "buy building test" game_state "catnip" 100.0 "field" 10
+    buy_building_test "buy building test" game_state "camelnip" 100.0 "field" 10
       11;
-    buy_building_test "buy logging test" game_state "catnip" 100.0 "logging" 1 1;
+    buy_building_test "buy logging test" game_state "camelnip" 100.0 "logging" 1
+      1;
     buy_building_new_resource_test "buy building new resource test" game_state
-      "catnip" 100.0 "logging" 1 "wood" 0.0;
+      "camelnip" 100.0 "logging" 1 "wood" 0.0;
     buy_building_exception_test "buy building exception test" game_state 10
       "field";
-    tick_test "tick money test" game_state "catnip" 0.125;
+    tick_test "tick money test" game_state "camelnip" 0.125;
     tick_test "tick loggingtest"
-      (buy_building (State.edit_resource game_state "catnip" 10.0) 1 "logging")
+      (buy_building
+         (State.edit_resource game_state "camelnip" 10.0)
+         1 "logging")
       "wood" 0.125;
-    trade_test "trade test" game_state "catnip" 1000.0 "wood" 10 10.0;
+    trade_test "trade test" game_state "camelnip" 1000.0 "wood" 10 10.0;
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)
@@ -193,7 +196,7 @@ let parse_buy_test (name : string) (state : t) (input : string)
   assert_equal expected_output
     (State.quantity_of_building
        (Inputprocessor.parse_input input
-          (State.edit_resource game_state "catnip" 20.0))
+          (State.edit_resource game_state "camelnip" 20.0))
        building)
 
 let parse_trade_test (name : string) (state : t) (input : string)
@@ -202,7 +205,7 @@ let parse_trade_test (name : string) (state : t) (input : string)
   assert_equal expected_output
     (State.get_resource
        (Inputprocessor.parse_input input
-          (State.edit_resource game_state "catnip" 1000.0))
+          (State.edit_resource game_state "camelnip" 1000.0))
        resource)
 
 let inputprocessor_tests =
