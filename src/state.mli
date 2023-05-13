@@ -41,3 +41,6 @@ val tick : t -> t
     Resource values are updated based on owned building production*)
 
 val save : t -> unit
+(** [save t] saves the state [t] onto state.json file. **)
+
+val resource_list : t -> string list
