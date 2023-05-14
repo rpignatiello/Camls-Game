@@ -238,6 +238,16 @@ let get_season_test (name : string) (user : t) (expected_output : string) : test
   name >:: fun _ ->
   assert_equal expected_output (State.get_season user) ~printer:pp_string
 
+let get_day_test (name : string) (user : t) (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (State.get_day user) ~printer:string_of_int
+
+let cost_test (name : string) (user : t) (building : string)
+    (expected_output : float) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (State.cost user building)
+    ~printer:string_of_float
+
 let buy_building_test (name : string) (state : t) (resource_to_edit : string)
     (amt : float) (building_type : string) (quantity : int)
     (expected_output : int) : test =
@@ -324,13 +334,18 @@ let state_tests =
     calculate_camels_test "camels at start" state 2;
     convert_buil_list_test "string version of original state" game_state
       ("{ \n" ^ "\"name\": \"" ^ "hut" ^ "\", \n" ^ "\"quantity\": "
-     ^ string_of_int 1 ^ "\n" ^ "}" ^ ", " ^ "{ \n" ^ "\"name\": \"" ^ "field"
-     ^ "\", \n" ^ "\"quantity\": " ^ string_of_int 1 ^ "\n" ^ "}");
+     ^ string_of_int 1 ^ ",\n" ^ "\"cost now\": " ^ "5.0" ^ "\n" ^ "}" ^ ", "
+     ^ "{ \n" ^ "\"name\": \"" ^ "field" ^ "\", \n" ^ "\"quantity\": "
+     ^ string_of_int 1 ^ ",\n" ^ "\"cost now\": " ^ "10.0" ^ "\n" ^ "}");
     convert_resources_list_test "string version of original state resources"
       game_state
       ("{ \n" ^ "\"name\": \"" ^ "hut" ^ "\", \n" ^ "\"quantity\": "
-     ^ string_of_int 1 ^ "\n" ^ "}" ^ ", " ^ "{ \n" ^ "\"name\": \"" ^ "field"
-     ^ "\", \n" ^ "\"quantity\": " ^ string_of_int 1 ^ "\n" ^ "}");
+     ^ string_of_int 1 ^ ",\n" ^ "\"cost now\": " ^ "5.0" ^ "\n" ^ "}" ^ ", "
+     ^ "{ \n" ^ "\"name\": \"" ^ "field" ^ "\", \n" ^ "\"quantity\": "
+     ^ string_of_int 1 ^ ",\n" ^ "\"cost now\": " ^ "10.0" ^ "\n" ^ "}");
+    cost_test "cost of field at start" game_state "field" 10.0;
+    cost_test "cost of hut at start" game_state "hut" 5.0;
+    get_day_test "day at start" game_state 1;
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)
