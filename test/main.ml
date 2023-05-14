@@ -207,6 +207,19 @@ let building_list_test (name : string) input1 (expected_output : string list) :
   assert_equal ~cmp:cmp_set_like_lists expected_output
     (building_list (State.from_json input1))
 
+let resource_list_test (name : string) input1 (expected_output : string list) :
+    test =
+  name >:: fun _ ->
+  assert_equal ~cmp:cmp_set_like_lists expected_output
+    (resource_list (State.from_json input1))
+
+let calculate_camels_test (name : string) input1 (expected_output : int) : test
+    =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (calculate_camels (State.from_json input1))
+    ~printer:string_of_int
+
 let quantity_of_building_test_assert (name : string) input1 (input2 : string) :
     test =
   name >:: fun _ ->
@@ -273,6 +286,16 @@ let trade_test (name : string) (state : t) (resource_to_edit : string)
        resource_type)
     ~printer:string_of_float
 
+let convert_buil_list_test (name : string) (user : t) (expected_output : string)
+    : test =
+  name >:: fun _ ->
+  assert_equal expected_output (State.convert_buil_list user) ~printer:pp_string
+
+let convert_resources_list_test (name : string) (user : t)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (State.convert_buil_list user) ~printer:pp_string
+
 let game_state = from_json state
 
 let state_tests =
@@ -281,6 +304,7 @@ let state_tests =
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
     quantity_of_camel_test "amount of camels user has at start" state 0;
     building_list_test "list of building" state [ "field"; "hut" ];
+    resource_list_test "list of resources" state [ "camelnip" ];
     buy_building_test "buy building test" game_state "camelnip" 100.0 "field" 10
       11;
     buy_building_test "buy logging test" game_state "camelnip" 100.0 "logging" 1
@@ -297,6 +321,16 @@ let state_tests =
       "wood" 0.125;
     trade_test "trade test" game_state "camelnip" 1000.0 "wood" 10 10.0;
     get_season_test "current season" game_state "summer";
+    calculate_camels_test "camels at start" state 2;
+    convert_buil_list_test "string version of original state" game_state
+      ("{ \n" ^ "\"name\": \"" ^ "hut" ^ "\", \n" ^ "\"quantity\": "
+     ^ string_of_int 1 ^ "\n" ^ "}" ^ ", " ^ "{ \n" ^ "\"name\": \"" ^ "field"
+     ^ "\", \n" ^ "\"quantity\": " ^ string_of_int 1 ^ "\n" ^ "}");
+    convert_resources_list_test "string version of original state resources"
+      game_state
+      ("{ \n" ^ "\"name\": \"" ^ "hut" ^ "\", \n" ^ "\"quantity\": "
+     ^ string_of_int 1 ^ "\n" ^ "}" ^ ", " ^ "{ \n" ^ "\"name\": \"" ^ "field"
+     ^ "\", \n" ^ "\"quantity\": " ^ string_of_int 1 ^ "\n" ^ "}");
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)

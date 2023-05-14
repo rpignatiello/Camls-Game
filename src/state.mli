@@ -45,3 +45,5 @@ val save : t -> unit
 
 val resource_list : t -> string list
 val get_season : t -> string
+val calculate_camels : t -> int
+val convert_buil_list : t -> string
