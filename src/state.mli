@@ -48,3 +48,5 @@ val get_season : t -> string
 val get_day : t -> int
 val add_camelnip : t -> t
 val cost : t -> string -> float
+val calculate_camels : t -> int
+val convert_buil_list : t -> string
