@@ -3,11 +3,13 @@
   "Buildings": [
     {
       "name": "hut",
-      "quantity": 1
+      "quantity": 1,
+      "cost now": 5.0
     },
     {
       "name": "field",
-      "quantity": 1
+      "quantity": 1,
+      "cost now": 10.0
     }
   ],
   "Resources": [

@@ -298,7 +298,9 @@ let convert_buil_list (state : t) =
        (fun a x ->
          ("{ \n" ^ "\"name\": \"" ^ x ^ "\", \n" ^ "\"quantity\": "
          ^ string_of_int (quantity_of_building state x)
-         ^ "\n" ^ "}")
+         ^ ",\n\"cost now\": "
+         ^ string_of_float (cost state x)
+         ^ "0\n}")
          :: a)
        [] (building_list state))
 

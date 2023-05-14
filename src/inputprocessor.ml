@@ -59,6 +59,24 @@ let trade cmd_list (state : State.t) =
         (InvalidInput "Error: Quantity to Trade for Must be Greater than 0.")
     else trade state (List.nth cmd_list 1) quantity
 
+let save cmd_list (state : State.t) =
+  if List.length cmd_list <> 1 then
+    raise (InvalidInput "To save game data, type [save]")
+  else save state;
+  state
+
+let data_dir_prefix = "data" ^ Filename.dir_sep
+
+let def =
+  State.from_json
+    (Yojson.Basic.from_file (data_dir_prefix ^ "default_state.json"))
+
+let reset cmd_list =
+  if List.length cmd_list <> 1 then
+    raise (InvalidInput "To reset save data, type [reset]")
+  else State.save def;
+  def
+
 let string_empty s = if s = " " || s = "" then false else true
 
 let parse_input input state =
@@ -71,4 +89,6 @@ let parse_input input state =
   | "buy" :: _ -> buy cmd_list state
   | "trade" :: _ -> trade cmd_list state
   | "gather" :: _ -> bonfire cmd_list state
+  | "save" :: _ -> save cmd_list state
+  | "reset" :: _ -> reset cmd_list
   | _ -> raise (InvalidInput "Error: Invalid Input")
