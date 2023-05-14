@@ -27,6 +27,14 @@ let buy cmd_list (state : State.t) =
       raise (InvalidInput "Error: Quantity to Purchase Must be Greater than 0.")
     else buy_building state quantity (List.nth cmd_list 1)
 
+let bonfire cmd_list (state : State.t) =
+  if List.length cmd_list <> 1 || List.nth cmd_list 0 <> "gather" then
+    raise
+      (InvalidInput
+         "Error: Incorrect Number of Arguments Provided. To gather camelnip, \
+          type [gather]")
+  else add_camelnip state
+
 let trade cmd_list (state : State.t) =
   if List.length cmd_list <> 3 then
     raise
@@ -62,4 +70,5 @@ let parse_input input state =
   | [] -> raise (NoInput "Error: Please Input a Command")
   | "buy" :: _ -> buy cmd_list state
   | "trade" :: _ -> trade cmd_list state
+  | "gather" :: _ -> bonfire cmd_list state
   | _ -> raise (InvalidInput "Error: Invalid Input")

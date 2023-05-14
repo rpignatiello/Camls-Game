@@ -45,3 +45,6 @@ val save : t -> unit
 
 val resource_list : t -> string list
 val get_season : t -> string
+val get_day : t -> int
+val add_camelnip : t -> t
+val cost : t -> string -> float

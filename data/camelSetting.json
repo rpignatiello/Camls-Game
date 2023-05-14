@@ -24,6 +24,7 @@
       "name": "field",
       "cost": 10.0,
       "cost item": "camelnip",
+      "cost multiplier": 1.12,
       "production": 0.125,
       "production item": "camelnip"
     },
@@ -31,6 +32,7 @@
       "name": "logging",
       "cost": 10.0,
       "cost item": "camelnip",
+      "cost multiplier": 1.12,
       "production": 0.125,
       "production item": "wood"
     },
@@ -38,6 +40,7 @@
       "name": "hut",
       "cost": 5.0,
       "cost item": "wood",
+      "cost multiplier": 1.12,
       "production": 0.0,
       "production item": ""
     }

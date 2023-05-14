@@ -37,3 +37,4 @@ val season_multiplier : t -> string -> float
 val next_season : t -> string -> string
 val resource_cost : setting -> float
 val resource_cost_type : setting -> string
+val cost_multiplier : t -> string -> float

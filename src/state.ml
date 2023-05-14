@@ -8,6 +8,7 @@ exception UnknownResource of string
 type owned_buildings = {
   name : string;
   quantity : int;
+  cost_now : float;
 }
 
 type resources = {
@@ -34,6 +35,7 @@ let from_building json : owned_buildings =
   {
     name = json |> member "name" |> to_string;
     quantity = json |> member "quantity" |> to_int;
+    cost_now = json |> member "cost now" |> to_float;
   }
 
 let from_resources json =
@@ -63,6 +65,7 @@ let quantity_of_building user building =
   | h :: _ -> h.quantity
 
 let get_season user = user.season
+let get_day user = user.day
 let quantity_of_camel user = user.camel
 let game_settings state = state.game_settings
 
@@ -72,10 +75,30 @@ let building_list user =
 let resource_list user = List.map (fun (r : resources) -> r.name) user.resources
 let calculate_camels user = quantity_of_building user "hut" * 2
 
-let rec add_building_type (buildings : owned_buildings list) (bldg : string) =
+let get_building user building =
+  match
+    List.filter
+      (fun (b : owned_buildings) -> b.name = building)
+      user.owned_buildings
+  with
+  | [] -> raise (UnknownBuilding "Building Not Found")
+  | h :: t -> h
+
+let cost user building = (get_building user building).cost_now
+
+let rec add_building_type (buildings : owned_buildings list) (bldg : string)
+    setting =
   match buildings with
-  | h :: t -> if h.name = bldg then h :: t else h :: add_building_type t bldg
-  | [] -> [ { name = bldg; quantity = 0 } ]
+  | h :: t ->
+      if h.name = bldg then h :: t else h :: add_building_type t bldg setting
+  | [] ->
+      [
+        {
+          name = bldg;
+          quantity = 0;
+          cost_now = Camel.number_for_building setting bldg;
+        };
+      ]
 
 let rec get_resource state resource =
   match List.filter (fun x -> x.name = resource) state.resources with
@@ -103,6 +126,24 @@ let edit_resource state resource amt =
     game_settings = state.game_settings;
     season = state.season;
     day = state.day;
+  }
+
+let add_camelnip user =
+  let new_resource =
+    List.map
+      (fun r ->
+        if r.name = "camelnip" then
+          { name = r.name; quantity = r.quantity +. 1.0 }
+        else r)
+      user.resources
+  in
+  {
+    resources = new_resource;
+    camel = user.camel;
+    owned_buildings = user.owned_buildings;
+    game_settings = user.game_settings;
+    season = user.season;
+    day = user.day;
   }
 
 let trade state resource quantity =
@@ -166,12 +207,21 @@ let buy_building state (quantity : int) (building_type : string) =
              (produce_item_building state.game_settings building_type))
       in
       let new_owned_buildings =
-        List.map
-          (fun (b : owned_buildings) : owned_buildings ->
-            if b.name = building_type then
-              { name = b.name; quantity = b.quantity + quantity }
-            else b)
-          (add_building_type state.owned_buildings building_type)
+        if Camel.contains_building state.game_settings building_type then
+          List.map
+            (fun (b : owned_buildings) : owned_buildings ->
+              if b.name = building_type then
+                {
+                  name = b.name;
+                  quantity = b.quantity + quantity;
+                  cost_now =
+                    b.cost_now
+                    *. Camel.cost_multiplier state.game_settings b.name;
+                }
+              else b)
+            (add_building_type state.owned_buildings building_type
+               state.game_settings)
+        else state.owned_buildings
       in
       {
         resources = new_resources;

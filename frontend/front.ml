@@ -40,6 +40,8 @@ let () =
             (waddstr main_window
                (b ^ ": "
                ^ string_of_int (State.quantity_of_building !c b)
+               ^ " cost: "
+               ^ string_of_float (State.cost !c b)
                ^ "\n"))
         then failwith "Error!"
         else ())
@@ -54,8 +56,8 @@ let () =
         else ())
       (State.resource_list !c);
 
-    if not (waddstr main_window ("time: " ^ string_of_int (!i / 10))) then
-      failwith "Error"
+    if not (waddstr main_window ("day: " ^ string_of_int (State.get_day !c)))
+    then failwith "Error"
     else ();
     let input = getch () in
     let tmp = if input = -1 then "" else String.make 1 (char_of_int input) in
@@ -78,7 +80,7 @@ let () =
     i := !i + 1;
 
     if not (refresh ()) then failwith "error" else ();
-    if !i mod 10 = 0 then c := State.tick !c else c := !c;
+    if !i mod 20 = 0 then c := State.tick !c else c := !c;
     ignore (Unix.select [] [] [] 0.05)
   done;
   endwin ()
