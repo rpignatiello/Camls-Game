@@ -89,6 +89,7 @@ let rec parse_input input state =
   | "buy" :: _ -> buy cmd_list state
   | "trade" :: _ -> trade cmd_list state
   | "gather" :: _ -> bonfire cmd_list state
+  | "g" :: _ -> bonfire [ "gather" ] state
   | "save" :: _ -> save cmd_list state
   | "reset" :: _ -> reset cmd_list
   | "pause" :: _ ->
