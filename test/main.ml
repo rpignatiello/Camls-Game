@@ -361,6 +361,7 @@ let state_tests =
     cost_test "cost of hut at start" game_state "hut" 5.0;
     get_day_test "day at start" game_state 1;
     buy_building_test "buy hut test" game_state "wood" 10.0 "hut" 1 2;
+    buy_building_exception_test "buy hut exception test" game_state 10 "hut";
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)
@@ -381,11 +382,49 @@ let parse_trade_test (name : string) (state : t) (input : string)
           (State.edit_resource game_state "camelnip" 1000.0))
        resource)
 
+let parse_buy_num_args_exc_test (name : string) (state : t) (input : string) :
+    test =
+  name >:: fun _ ->
+  assert_raises
+    (Inputprocessor.InvalidInput
+       "Error: Incorrect Number of Arguments Provided. To buy a building use \
+        the form [buy] [building] [quantity]") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_buy_bldg_not_found_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises (Camel.UnknownBuilding "Building Not Found") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_buy_invalid_quant_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises
+    (Inputprocessor.InvalidInput "Invalid Quantity to Purchase Entered.")
+    (fun () -> Inputprocessor.parse_input input state)
+
+let parse_buy_quantity_too_small_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises
+    (Inputprocessor.InvalidInput
+       "Error: Quantity to Purchase Must be Greater than 0.") (fun () ->
+      Inputprocessor.parse_input input state)
+
 let inputprocessor_tests =
   [
     parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3;
     parse_trade_test "parse trade wood test" game_state "trade wood 10" "wood"
       10.0;
+    parse_buy_num_args_exc_test "parse buy incorrect num args exc test"
+      game_state "buy wood";
+    parse_buy_bldg_not_found_exc_test "parse buy bldg not found exc test"
+      game_state "buy farms 1";
+    parse_buy_invalid_quant_exc_test "parse buy invalid quantity exc test"
+      game_state "buy field five";
+    parse_buy_quantity_too_small_exc_test
+      "parse buy quantity too small exc test" game_state "buy field 0";
   ]
 
 let def =

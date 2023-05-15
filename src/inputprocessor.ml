@@ -10,22 +10,26 @@ let buy cmd_list (state : State.t) =
       (InvalidInput
          "Error: Incorrect Number of Arguments Provided. To buy a building use \
           the form [buy] [building] [quantity]")
-  else if
-    not (contains_building (State.game_settings state) (List.nth cmd_list 1))
-  then
-    raise
-      (InvalidInput
-         "Error: Building Not Found. Please Check that the Requested Building \
-          Exists")
   else
-    let quantity =
-      try int_of_string (List.nth cmd_list 2)
-      with Failure _ ->
-        raise (InvalidInput "Invalid Quantity to Purchase Entered.")
+    let tmp =
+      try contains_building (State.game_settings state) (List.nth cmd_list 1)
+      with Failure _ -> false
     in
-    if quantity <= 0 then
-      raise (InvalidInput "Error: Quantity to Purchase Must be Greater than 0.")
-    else buy_building state quantity (List.nth cmd_list 1)
+    if not tmp then
+      raise
+        (InvalidInput
+           "Error: Building Not Found. Please Check that the Requested \
+            Building Exists")
+    else
+      let quantity =
+        try int_of_string (List.nth cmd_list 2)
+        with Failure _ ->
+          raise (InvalidInput "Invalid Quantity to Purchase Entered.")
+      in
+      if quantity <= 0 then
+        raise
+          (InvalidInput "Error: Quantity to Purchase Must be Greater than 0.")
+      else buy_building state quantity (List.nth cmd_list 1)
 
 let bonfire cmd_list (state : State.t) =
   if List.length cmd_list <> 1 || List.nth cmd_list 0 <> "gather" then
