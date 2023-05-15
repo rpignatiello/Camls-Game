@@ -276,7 +276,7 @@ let tick (state : t) =
   if state.day >= 999 then
     {
       resources =
-        camelnip_consume new_resource_list (calculate_camels state) false;
+        camelnip_consume new_resource_list (calculate_camels state) true;
       camel = calculate_camels state;
       owned_buildings = state.owned_buildings;
       game_settings = state.game_settings;
@@ -286,7 +286,8 @@ let tick (state : t) =
   else
     {
       resources =
-        camelnip_consume new_resource_list (calculate_camels state) false;
+        camelnip_consume new_resource_list (calculate_camels state)
+          (state.day > 200);
       camel = calculate_camels state;
       owned_buildings = state.owned_buildings;
       game_settings = state.game_settings;
