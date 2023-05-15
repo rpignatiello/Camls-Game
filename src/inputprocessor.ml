@@ -79,7 +79,7 @@ let reset cmd_list =
 
 let string_empty s = if s = " " || s = "" then false else true
 
-let parse_input input state =
+let rec parse_input input state =
   let cmd_list =
     List.filter string_empty
       (String.split_on_char ' ' (String.lowercase_ascii input))
@@ -91,4 +91,22 @@ let parse_input input state =
   | "gather" :: _ -> bonfire cmd_list state
   | "save" :: _ -> save cmd_list state
   | "reset" :: _ -> reset cmd_list
+  | "pause" :: _ ->
+      Printf.printf "\n Game is paused. Press enter to continue...";
+      flush stdout;
+      ignore (Unix.read Unix.stdin (Bytes.create 1) 0 1);
+      state
+  | "help" :: _ ->
+      Printf.printf "\n  Available commands: ";
+      Printf.printf "\n1) [buy][name of resource ex. field][quantity ex. 1]";
+      Printf.printf "\n 2) [trade][name of resource ex. field][quantity ex. 1]";
+      Printf.printf "\n 3) [gather][name of resource ex. camelnip]";
+      Printf.printf "\n 4) [save]";
+      Printf.printf "\n 5) [reset]";
+      Printf.printf "\n 6) [help]";
+      Printf.printf "\n 7) [pause]";
+      Printf.printf "\n\n Press enter to continue...";
+      flush stdout;
+      ignore (Unix.read Unix.stdin (Bytes.create 1) 0 1);
+      state
   | _ -> raise (InvalidInput "Error: Invalid Input")

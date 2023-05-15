@@ -1,22 +1,23 @@
-{ 
-"Camels": 0, 
-"Buildings": [
-{ 
-"name": "field", 
-"quantity": 1,
-"cost now": 10.0
-}, { 
-"name": "hut", 
-"quantity": 1,
-"cost now": 5.0
+{
+  "Camels": 0,
+  "Buildings": [
+    {
+      "name": "field",
+      "quantity": 1,
+      "cost now": 10.0
+    },
+    {
+      "name": "hut",
+      "quantity": 1,
+      "cost now": 5.0
+    }
+  ],
+  "Resources": [
+    {
+      "name": "camelnip",
+      "quantity": 0.0
+    }
+  ],
+  "Season": "summer",
+  "Day": 1
 }
-], 
- "Resources": [
-{ 
-"name": "camelnip", 
-"quantity": 0.0
-}
- ],
- "Season": "summer",
- "Day": 1
- }
