@@ -330,7 +330,10 @@ let convert_resources_list_test (name : string) (user : t)
 
 let get_resource_test (name : string) (user : t) (input : string)
     (expected_output : float) : test =
-  name >:: fun _ -> assert_equal expected_output (State.get_resource user input)
+  name >:: fun _ ->
+  assert_equal expected_output
+    (State.get_resource user input)
+    ~printer:string_of_float
 
 let get_resource_exc_test (name : string) (state : t) (input : string) : test =
   name >:: fun _ ->
@@ -506,6 +509,7 @@ let parse_unknown_command_exc_test (name : string) (state : t) (input : string)
 let inputprocessor_tests =
   [
     parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3;
+    parse_buy_test "parse buy logging 1" game_state "buy logging 1" "logging" 1;
     parse_trade_test "parse trade wood test" game_state "trade wood 10" "wood"
       10.0;
     parse_buy_num_args_exc_test "parse buy incorrect num args exc test"
