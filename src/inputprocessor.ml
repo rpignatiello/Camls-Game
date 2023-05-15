@@ -100,7 +100,7 @@ let rec parse_input input state =
       Printf.printf "\n  Available commands: ";
       Printf.printf "\n1) [buy][name of resource ex. field][quantity ex. 1]";
       Printf.printf "\n 2) [trade][name of resource ex. field][quantity ex. 1]";
-      Printf.printf "\n 3) [gather][name of resource ex. camelnip]";
+      Printf.printf "\n 3) [gather]";
       Printf.printf "\n 4) [save]";
       Printf.printf "\n 5) [reset]";
       Printf.printf "\n 6) [help]";
