@@ -185,8 +185,7 @@ let trade state resource quantity =
 let buy_building state (quantity : int) (building_type : string) =
   if contains_building state.game_settings building_type then
     let total_cost =
-      number_for_building state.game_settings building_type
-      *. float_of_int quantity
+      (get_building state building_type).cost_now *. float_of_int quantity
     in
     let resource_type = item_for_building state.game_settings building_type in
     let player_resource_amount =

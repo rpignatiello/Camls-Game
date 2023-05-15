@@ -102,7 +102,7 @@ let rec parse_input input state =
       ignore (Unix.read Unix.stdin (Bytes.create 1) 0 1);
       state
   | "help" :: _ ->
-      Printf.printf "\n  Available commands: ";
+      Printf.printf "\n Available commands: ";
       Printf.printf "\n1) [buy][name of resource ex. field][quantity ex. 1]";
       Printf.printf "\n 2) [trade][name of resource ex. field][quantity ex. 1]";
       Printf.printf "\n 3) [gather]";
