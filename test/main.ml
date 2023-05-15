@@ -412,6 +412,66 @@ let parse_buy_quantity_too_small_exc_test (name : string) (state : t)
        "Error: Quantity to Purchase Must be Greater than 0.") (fun () ->
       Inputprocessor.parse_input input state)
 
+let parse_bonfire_inv_quant_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises
+    (Inputprocessor.InvalidInput
+       "Error: Incorrect Number of Arguments Provided. To gather camelnip, \
+        type [gather]") (fun () -> Inputprocessor.parse_input input state)
+
+let parse_gather_test (name : string) (state : t) (input : string)
+    (expected_output : float) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (get_resource (Inputprocessor.parse_input input state) "camelnip")
+
+let parse_trade_inv_quant_args_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises
+    (Inputprocessor.InvalidInput
+       "Error: Incorrect Number of Arguments Provided. To trade resources use \
+        the form [trade] [target resource] [quantity]") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_trade_res_not_found (name : string) (state : t) (input : string) :
+    test =
+  name >:: fun _ ->
+  assert_raises (Camel.UnknownResource "Resource Not Found") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_trade_inv_quant_exc_test (name : string) (state : t) (input : string)
+    : test =
+  name >:: fun _ ->
+  assert_raises (InvalidInput "Invalid Quantity to Trade for Entered")
+    (fun () -> Inputprocessor.parse_input input state)
+
+let parse_trade_quant_too_small_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises
+    (InvalidInput "Error: Quantity to Trade for Must be Greater than 0.")
+    (fun () -> Inputprocessor.parse_input input state)
+
+let parse_save_inv_arg_num_exc_test (name : string) (state : t) (input : string)
+    : test =
+  name >:: fun _ ->
+  assert_raises (InvalidInput "To save game data, type [save]") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_reset_inv_arg_num_exc_test (name : string) (state : t)
+    (input : string) : test =
+  name >:: fun _ ->
+  assert_raises (InvalidInput "To reset save data, type [reset]") (fun () ->
+      Inputprocessor.parse_input input state)
+
+let parse_unknown_command_exc_test (name : string) (state : t) (input : string)
+    : test =
+  name >:: fun _ ->
+  assert_raises (InvalidInput "Error: Invalid Input. Unknown Command")
+    (fun () -> Inputprocessor.parse_input input state)
+
 let inputprocessor_tests =
   [
     parse_buy_test "parse buy field test" game_state "buy field 2" "field" 3;
@@ -425,6 +485,24 @@ let inputprocessor_tests =
       game_state "buy field five";
     parse_buy_quantity_too_small_exc_test
       "parse buy quantity too small exc test" game_state "buy field 0";
+    parse_bonfire_inv_quant_exc_test
+      "parse invalid arg quantity bonfire exc test" game_state "gather 1";
+    parse_trade_inv_quant_args_exc_test "parse trade invalid arg quant test"
+      game_state "trade wood";
+    parse_trade_res_not_found "parse trade resource not found exc test"
+      game_state "trade logs 1";
+    parse_trade_inv_quant_exc_test "parse trade invalid quant trade exc test"
+      game_state "trade wood one";
+    parse_trade_quant_too_small_exc_test "parse trade quant too small exc test"
+      game_state "trade wood -1";
+    parse_trade_quant_too_small_exc_test "parse trade quant too small exc test"
+      game_state "trade wood 0";
+    parse_save_inv_arg_num_exc_test "parse save inv arg num exc test" game_state
+      "save game";
+    parse_reset_inv_arg_num_exc_test "parse reset inv arg num exc test"
+      game_state "reset game";
+    parse_unknown_command_exc_test "parse unknown command exc test" game_state
+      "purchase field 5";
   ]
 
 let def =

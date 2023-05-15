@@ -114,4 +114,4 @@ let rec parse_input input state =
       flush stdout;
       ignore (Unix.read Unix.stdin (Bytes.create 1) 0 1);
       state
-  | _ -> raise (InvalidInput "Error: Invalid Input")
+  | _ -> raise (InvalidInput "Error: Invalid Input. Unknown Command")
