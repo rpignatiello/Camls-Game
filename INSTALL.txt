@@ -1,3 +1,5 @@
-1. Run dune build inside the root folder of this project
-2. Run make play to display the frontend
-3. Type "help;" for the user input to get the instructions
+1. run $ opam install curses
+2. run $ opam install yojson
+3. run $ dune build
+4. run $ make play
+5. have fun!
