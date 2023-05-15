@@ -162,17 +162,25 @@ let camel_tests =
   [
     item_for_building_test "item required to make building field" camelSetting
       "field" "camelnip";
+    item_for_building_test "item required to make building field" camelSetting
+      "logging" "camelnip";
     item_for_building_test_assert "item not a valid building" camelSetting "cat";
     number_for_building_test "amount needed to build a building test"
       camelSetting "field" 10.;
+    number_for_building_test "amount needed to build a building test"
+      camelSetting "hut" 5.;
     number_for_building_test_assert
       "amount needed to build from invalid building" camelSetting "cat";
     produce_item_building_test "item produced from valid building" camelSetting
       "field" "camelnip";
+    produce_item_building_test "item produced from valid building" camelSetting
+      "logging" "wood";
     produce_item_building_test_assert "item produced from invalid building"
       camelSetting "cat";
     production_rate_building_test "production rate of valid building"
       camelSetting "field" 0.125;
+    production_rate_building_test "production rate of valid building"
+      camelSetting "logging" 0.125;
     production_rate_building_test_assert "production rate of invalid building"
       camelSetting "cat";
     contains_building_test "valid building" camelSetting "field" true;
@@ -320,11 +328,28 @@ let convert_resources_list_test (name : string) (user : t)
   name >:: fun _ ->
   assert_equal expected_output (State.convert_buil_list user) ~printer:pp_string
 
+let get_resource_test (name : string) (user : t) (input : string)
+    (expected_output : float) : test =
+  name >:: fun _ -> assert_equal expected_output (State.get_resource user input)
+
+let get_resource_exc_test (name : string) (state : t) (input : string) : test =
+  name >:: fun _ ->
+  assert_raises (State.UnknownResource "Resource Not Found") (fun () ->
+      State.get_resource state input)
+
+let trade_not_enough_money_exc_test (name : string) (state : t) (input : string)
+    (quantity : int) : test =
+  name >:: fun _ ->
+  assert_raises
+    (NotEnoughMoney "You don't have enough money for this purchase.") (fun () ->
+      State.trade state input quantity)
+
 let game_state = from_json state
 
 let state_tests =
   [
     quantity_of_building_test "quantity of valid building" state "field" 1;
+    quantity_of_building_test "quantity of valid building" state "hut" 1;
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
     quantity_of_camel_test "amount of camels user has at start" state 2;
     building_list_test "list of building" state [ "field"; "hut" ];
@@ -333,6 +358,7 @@ let state_tests =
       11;
     buy_building_test "buy logging test" game_state "camelnip" 100.0 "logging" 1
       1;
+    buy_building_test "buy hut test" game_state "wood" 100.0 "hut" 1 2;
     buy_building_new_resource_test "buy building new resource test" game_state
       "camelnip" 100.0 "logging" 1 "wood" 0.0;
     buy_building_exception_test "buy building exception test" game_state 10
@@ -360,8 +386,13 @@ let state_tests =
     cost_test "cost of field at start" game_state "field" 10.0;
     cost_test "cost of hut at start" game_state "hut" 5.0;
     get_day_test "day at start" game_state 1;
+    get_day_test "day 2 test" (State.tick game_state) 2;
     buy_building_test "buy hut test" game_state "wood" 10.0 "hut" 1 2;
     buy_building_exception_test "buy hut exception test" game_state 10 "hut";
+    get_resource_test "get resource test" game_state "camelnip" 0.0;
+    get_resource_exc_test "get resource exc test" game_state "birds";
+    trade_not_enough_money_exc_test "trade not enough money exc test" game_state
+      "wood" 1000;
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)

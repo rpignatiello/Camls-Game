@@ -2,6 +2,7 @@ type t
 
 exception UnknownBuilding of string
 exception NotEnoughMoney of string
+exception UnknownResource of string
 
 val from_json : Yojson.Basic.t -> t
 (** [from_json] returns the game state loaded from player's save data *)
