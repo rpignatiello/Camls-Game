@@ -1,4 +1,7 @@
-(* To run this file: OCAMLRUNPARAM=b dune exec test/main.exe *)
+(* Our testing strategy was to test all public functions. If a function is
+   called from another file, it would be tested here. We intentionally did not
+   test the frontend/front.ml as the frontend operates very differently from the
+   other components of the project *)
 open OUnit2
 open CamlGame
 open Camel
