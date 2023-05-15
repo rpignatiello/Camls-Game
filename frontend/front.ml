@@ -46,11 +46,13 @@ let () =
       (State.building_list !c);
     List.iter
       (fun b ->
-        if
-          not
-            (waddstr main_window
-               (b ^ ": " ^ string_of_float (State.get_resource !c b) ^ "\n"))
-        then failwith "Error!"
+        if b <> "" then
+          if
+            not
+              (waddstr main_window
+                 (b ^ ": " ^ string_of_float (State.get_resource !c b) ^ "\n"))
+          then failwith "Error!"
+          else ()
         else ())
       (State.resource_list !c);
 
