@@ -1,7 +1,17 @@
 (* Our testing strategy was to test all public functions. If a function is
    called from another file, it would be tested here. We intentionally did not
    test the frontend/front.ml as the frontend operates very differently from the
-   other components of the project *)
+   other components of the project.
+
+   All three of our main modules were tested using OUnit. We implemented glass
+   box testing when writing test cases. Some test cases involve altering the
+   state of the game to change resource amounts to be able to purchase different
+   buildings or trade for different resources. Glass box testing is also
+   utilized to ensure that the correct exceptions get thrown.
+
+   Our testing shows the correctness of our system. We cover a variety of cases
+   and in combination with the use of our front end interface we can ensure that
+   the game behaves as expected. *)
 open OUnit2
 open CamlGame
 open Camel
