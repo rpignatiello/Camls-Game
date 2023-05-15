@@ -258,6 +258,7 @@ let buy_building_test (name : string) (state : t) (resource_to_edit : string)
           (State.edit_resource state resource_to_edit amt)
           quantity building_type)
        building_type)
+    ~printer:string_of_int
 
 let buy_building_new_resource_test (name : string) (state : t)
     (resource_to_edit : string) (amt : float) (building_type : string)
@@ -312,7 +313,7 @@ let state_tests =
   [
     quantity_of_building_test "quantity of valid building" state "field" 1;
     quantity_of_building_test_assert "quantity of invalid building" state "cat";
-    quantity_of_camel_test "amount of camels user has at start" state 0;
+    quantity_of_camel_test "amount of camels user has at start" state 2;
     building_list_test "list of building" state [ "field"; "hut" ];
     resource_list_test "list of resources" state [ "camelnip" ];
     buy_building_test "buy building test" game_state "camelnip" 100.0 "field" 10
@@ -346,6 +347,7 @@ let state_tests =
     cost_test "cost of field at start" game_state "field" 10.0;
     cost_test "cost of hut at start" game_state "hut" 5.0;
     get_day_test "day at start" game_state 1;
+    buy_building_test "buy hut test" game_state "wood" 10.0 "hut" 1 2;
   ]
 
 let parse_buy_test (name : string) (state : t) (input : string)

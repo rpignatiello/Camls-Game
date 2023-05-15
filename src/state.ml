@@ -111,13 +111,14 @@ let rec add_resource_type (resources : resources list) (res : string) =
   | [] -> [ { name = res; quantity = 0.0 } ]
 
 let edit_resource state resource amt =
+  let resources_with_new_type = add_resource_type state.resources resource in
   let new_resources =
     List.map
       (fun b ->
         if b.name = resource then
           { name = b.name; quantity = b.quantity +. amt }
         else b)
-      state.resources
+      resources_with_new_type
   in
   {
     resources = new_resources;
@@ -190,7 +191,9 @@ let buy_building state (quantity : int) (building_type : string) =
     let resource_type = item_for_building state.game_settings building_type in
     let player_resource_amount =
       (List.nth
-         (List.filter (fun r -> r.name = resource_type) state.resources)
+         (List.filter
+            (fun r -> r.name = resource_type)
+            (add_resource_type state.resources resource_type))
          0)
         .quantity
     in
