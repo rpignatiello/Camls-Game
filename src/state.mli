@@ -44,9 +44,24 @@ val save : t -> unit
 (** [save t] saves the state [t] onto state.json file. **)
 
 val resource_list : t -> string list
+(** [resource_list t] returns the list of resources in the game state [t] *)
+
 val get_season : t -> string
+(** [get_season t] returns the current season in the game state [t] *)
+
 val get_day : t -> int
+(** [get_day t] returns the day in the game state [t] *)
+
 val add_camelnip : t -> t
+(** [add_camelnip] increases and updates the amount of camelnip in the game
+    state [t] *)
+
 val cost : t -> string -> float
+(** [cost t resource] returns the cost of a resource in the game state [t] *)
+
 val calculate_camels : t -> int
+(** [calculate_camels t] returns the total amount of camels in the game state
+    [t] *)
+
 val convert_buil_list : t -> string
+(** [convert_buil_list t] returns the string version of the game state [t] *)

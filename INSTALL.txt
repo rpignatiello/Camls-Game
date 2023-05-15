@@ -1,2 +1,3 @@
 1. Run dune build inside the root folder of this project
-2. Run dune exec ./frontend/front.exe to display the frontend
+2. Run make play to display the frontend
+3. Type "help;" for the user input to get the instructions

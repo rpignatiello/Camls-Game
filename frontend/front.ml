@@ -9,8 +9,6 @@ type error_message = {
   time : int;
 }
 
-(* TODO 1. Add save option to inputprocessor_tests 2. add help option *)
-
 let () =
   let main_window = initscr () in
   let _ = nodelay main_window true in
